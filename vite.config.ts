@@ -7,5 +7,5 @@ export default defineConfig({
   optimizeDeps: {
     exclude: ['lucide-react'],
   },
-  base: process.env.NODE_ENV === 'production' ? '/EOB/' : '/',
+  base: process.env.NODE_ENV === 'production' ? '/eob/' : '/',
 });
