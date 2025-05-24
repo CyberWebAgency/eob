@@ -1,0 +1,575 @@
+import React, { useEffect, useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { useInView } from 'react-intersection-observer';
+import { X, Microscope, Zap, ExternalLink, Filter } from 'lucide-react';
+import { getTechnology } from '../services/api';
+
+// Define TypeScript interface for technology
+interface Technology {
+  id: number;
+  title: string;
+  description: string;
+  category?: string;
+  image?: string;
+  icon?: string;
+  order_number?: number;
+  status?: string;
+}
+
+// Lazy load the 3D model for better performance
+
+// Loading placeholder for the 3D model
+
+// Popup component for detailed view
+const TechnologyPopup: React.FC<{
+  technology: Technology;
+  onClose: () => void;
+}> = ({ technology, onClose }) => {
+  return (
+    <AnimatePresence>
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+        // z-[60] ensures it appears above the navbar (z-50)
+        className="fixed inset-0 bg-black/50 z-[60] flex items-start justify-center px-4 pt-20 pb-4 overflow-auto"
+        onClick={onClose}
+      >
+        <motion.div
+          initial={{ scale: 0.9, opacity: 0 }}
+          animate={{ scale: 1, opacity: 1 }}
+          exit={{ scale: 0.9, opacity: 0 }}
+          className="bg-white rounded-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto z-[70] relative"
+          onClick={e => e.stopPropagation()}
+        >
+          <div className="relative">
+            {technology.image && (
+              <div className="relative h-64 overflow-hidden">
+                <img 
+                  src={technology.image} 
+                  alt={technology.title} 
+                  className="w-full h-full object-cover"
+                  onError={(e) => {
+                    e.currentTarget.src = '/assets/facilities/facility.jpeg';
+                  }}
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-primary-900/80 to-transparent"></div>
+              </div>
+            )}
+            <button
+              onClick={onClose}
+              className="absolute top-4 right-4 bg-white/90 hover:bg-white text-gray-800 rounded-full p-2 transition-colors"
+            >
+              <X size={20} />
+            </button>
+          </div>
+          <div className="p-6">
+            <h3 className="text-2xl font-semibold mb-4">{technology.title}</h3>
+            {technology.category && (
+              <div className="mb-4">
+                <span className="inline-block bg-primary-100 text-primary-800 px-3 py-1 rounded-full text-sm font-medium">
+                  {technology.category}
+                </span>
+              </div>
+            )}
+            <div className="prose prose-lg max-w-none">
+              <p className="text-gray-600 whitespace-pre-line">{technology.description}</p>
+            </div>
+          </div>
+        </motion.div>
+      </motion.div>
+    </AnimatePresence>
+  );
+};
+
+const fadeInUp = {
+  hidden: { opacity: 0, y: 60 },
+  visible: { 
+    opacity: 1, 
+    y: 0,
+    transition: { duration: 0.8 }
+  }
+};
+
+const Technology: React.FC = () => {
+  const [technologies, setTechnologies] = useState<Technology[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error] = useState<string | null>(null);
+  const [selectedTech, setSelectedTech] = useState<Technology | null>(null);
+  const [category, setCategory] = useState<string>('all');
+  const [] = useState(false);
+
+  // Section header ref - set to trigger once so it doesn't disappear
+  const [ref] = useInView({
+    triggerOnce: true,
+    threshold: 0.1,
+  });
+
+  // Tech cards ref - stays visible once shown
+  const [] = useInView({
+    triggerOnce: true, // Keep cards visible once they've been shown
+    threshold: 0.05, // Lower threshold so they appear earlier
+    rootMargin: '0px 0px -10% 0px', // Trigger before they're fully in view
+  });
+
+  const [moleculeRef] = useInView({
+    triggerOnce: true,
+    threshold: 0.3,
+  });
+
+  // Optimize the model loading - only load when section is in view and after a short delay
+
+  // Fallback mock data
+  const mockTechnologies: Technology[] = [
+    {
+      id: 1,
+      title: "NK Cell Technology",
+      category: "Core Technology",
+      description: "Our proprietary NK cell platform generates highly cytotoxic cells with enhanced tumor-targeting abilities and extended persistence in vivo. This technology is central to our approach for treating solid tumors and hematological malignancies with improved efficacy and reduced side effects.\n\nKey features:\n- Enhanced cytotoxicity\n- Improved tumor targeting\n- Extended persistence\n- Allogeneic compatibility",
+      image: "/assets/technology/nk-cells.jpg",
+      icon: "microscope"
+    },
+    {
+      id: 2,
+      title: "Gamma Delta T Cell Platform",
+      category: "Core Technology",
+      description: "Specialized T cells that recognize a broader range of tumor antigens and exhibit potent anti-tumor activity. Our γδ T cell platform offers unique advantages in targeting cancers through non-MHC restricted mechanisms.\n\nKey features:\n- MHC-independent recognition\n- Natural tissue surveillance\n- Reduced risk of GvHD\n- Versatile targeting",
+      image: "/assets/technology/gamma-delta.jpg",
+      icon: "zap"
+    },
+    {
+      id: 3,
+      title: "Gamma Retroviral Vector System",
+      category: "Core Technology",
+      description: "Advanced delivery systems for efficient genetic modification of immune cells with high specificity and safety. Our vectors enable precise engineering of therapeutic cells for enhanced functionality.\n\nKey features:\n- High transduction efficiency\n- Improved safety profile\n- Stable gene expression\n- Scalable manufacturing",
+      image: "/assets/technology/vector.jpg",
+      icon: "vector"
+    },
+    {
+      id: 4,
+      title: "CRISPR Gene Editing",
+      category: "Future Technology",
+      description: "Next-generation gene editing for precise modification of immune cells with enhanced functionality. This platform allows for targeted genetic modifications that enhance therapeutic potential.\n\nKey features:\n- Precise genomic targeting\n- Multiplexed editing\n- Enhanced cellular function\n- Reduced off-target effects",
+      image: "/assets/technology/crispr.jpg"
+    },
+    {
+      id: 5,
+      title: "mRNA Delivery Platform",
+      category: "Future Technology",
+      description: "Innovative mRNA delivery systems for transient expression of therapeutic proteins in target cells. This approach enables flexible programming of cellular responses without permanent genetic modification.\n\nKey features:\n- Transient protein expression\n- Non-genetic modification\n- Rapid development cycle\n- Versatile applications",
+      image: "/assets/technology/mrna.jpg"
+    },
+    {
+      id: 6,
+      title: "AI-Driven Target Discovery",
+      category: "Future Technology",
+      description: "Harnessing artificial intelligence and machine learning to identify novel therapeutic targets and optimize treatment approaches. This computational platform accelerates development and improves efficacy.\n\nKey features:\n- Advanced target prediction\n- Treatment optimization\n- Biomarker identification\n- Accelerated development",
+      image: "/assets/technology/ai-ml.jpg"
+    }
+  ];
+
+  useEffect(() => {
+    const fetchTechnologyData = async () => {
+      try {
+        setLoading(true);
+        // Attempt to fetch real data
+        const data = await getTechnology().catch(() => {
+          console.log("Using mock technology data instead");
+          return mockTechnologies;
+        });
+        
+        setTechnologies(data);
+        setLoading(false);
+      } catch (err) {
+        console.log("Using mock technology data due to error");
+        setTechnologies(mockTechnologies);
+        setLoading(false);
+      }
+    };
+
+    fetchTechnologyData();
+  }, []);
+
+  // Function to truncate text to approximately 25-30 words
+  const truncateText = (text: string, maxWords: number = 30) => {
+    const words = text.split(' ');
+    if (words.length > maxWords) {
+      return words.slice(0, maxWords).join(' ') + '...';
+    }
+    return text;
+  };
+
+  // Get technologies for current category
+  const filteredTechnologies = category === 'all' 
+    ? technologies 
+    : technologies.filter(tech => tech.category === category);
+
+  // Split into core and future technologies
+  const coreTechnologies = filteredTechnologies.filter(tech => 
+    tech.category === 'Core Technology' || 
+    (!tech.category && technologies.indexOf(tech) < 3)
+  );
+  
+  const futureTechnologies = filteredTechnologies.filter(tech => 
+    tech.category === 'Future Technology' || 
+    (tech.category !== 'Core Technology' && technologies.indexOf(tech) >= 3)
+  );
+
+  // Icon mapping function
+  const getIconComponent = (tech: Technology) => {
+    if (tech.title.toLowerCase().includes('nk cell')) {
+      return <Microscope className="h-6 w-6 text-primary-600" />;
+    } else if (tech.title.toLowerCase().includes('gamma delta')) {
+      return <Zap className="h-6 w-6 text-secondary-600" />;
+    } else {
+      return <Filter className="h-6 w-6 text-tertiary-600" />;
+    }
+  };
+
+  if (loading) {
+    return (
+      <section id="technology" className="section-padding bg-background relative overflow-hidden">
+        <div className="container-custom">
+          <div className="text-center">
+            <h2 className="heading-md mb-6">
+              Our <span className="text-gradient">Technology</span> Platform
+            </h2>
+            <div className="flex justify-center mt-10">
+              <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary-600"></div>
+            </div>
+            <p className="text-gray-600 mt-4">Loading technology information...</p>
+          </div>
+        </div>
+      </section>
+    );
+  }
+
+  if (error && technologies.length === 0) {
+    return (
+      <section id="technology" className="section-padding bg-background relative overflow-hidden">
+        <div className="container-custom">
+          <div className="text-center">
+            <h2 className="heading-md mb-6">
+              Our <span className="text-gradient">Technology</span> Platform
+            </h2>
+            <p className="text-red-500">{error}</p>
+          </div>
+        </div>
+      </section>
+    );
+  }
+
+  if (technologies.length === 0) {
+    return (
+      <section id="technology" className="section-padding bg-background relative overflow-hidden">
+        <div className="container-custom">
+          <div className="text-center">
+            <h2 className="heading-md mb-6">
+              Our <span className="text-gradient">Technology</span> Platform
+            </h2>
+            <p className="text-gray-600">No technology information available at this time.</p>
+          </div>
+        </div>
+      </section>
+    );
+  }
+
+  return (
+    <section id="technology" className="section-padding bg-background relative overflow-hidden">
+      {/* Remove the white gradient at the top */}
+      
+      <div className="container-custom relative z-10" ref={ref}>
+        <motion.div
+          initial="hidden"
+          animate="visible"
+          variants={fadeInUp}
+          className="max-w-3xl mx-auto text-center mb-16"
+        >
+          <h2 className="heading-md mb-6 mt-10">
+            Our <span className="text-gradient">Technology</span> Platform
+          </h2>
+          <p className="text-gray-600 text-lg">
+            East Ocyon Bio leverages proprietary technologies in NK cells, Gamma Delta T cells,
+            and Gamma Retroviral vectors to develop breakthrough immunotherapies.
+          </p>
+        </motion.div>
+
+        {/* Overview & Core Technology Platform - Original static content */}
+        <div className="grid lg:grid-cols-2 gap-16 items-center mb-20">
+          <div>
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.3 }}
+              className="bg-white rounded-2xl shadow-xl p-8 mb-8"
+            >
+              <h3 className="heading-sm mb-4 text-primary-600">Our Core Technology Platform</h3>
+              <p className="text-gray-600 mb-6">
+                Our integrated platform combines advanced cell engineering and vector technologies 
+                to develop novel immunotherapies with superior efficacy and safety profiles.
+              </p>
+              <ul className="space-y-3">
+                <li className="flex items-start">
+                  <div className="bg-primary-100 rounded-full p-1 mr-3 mt-1">
+                    <div className="bg-primary-500 rounded-full w-2 h-2"></div>
+                  </div>
+                  <span className="text-gray-600">NK cell engineering and expansion</span>
+                </li>
+                <li className="flex items-start">
+                  <div className="bg-primary-100 rounded-full p-1 mr-3 mt-1">
+                    <div className="bg-primary-500 rounded-full w-2 h-2"></div>
+                  </div>
+                  <span className="text-gray-600">Gamma Delta T cell isolation and activation</span>
+                </li>
+                <li className="flex items-start">
+                  <div className="bg-primary-100 rounded-full p-1 mr-3 mt-1">
+                    <div className="bg-primary-500 rounded-full w-2 h-2"></div>
+                  </div>
+                  <span className="text-gray-600">Gamma Retroviral vector production</span>
+                </li>
+                <li className="flex items-start">
+                  <div className="bg-primary-100 rounded-full p-1 mr-3 mt-1">
+                    <div className="bg-primary-500 rounded-full w-2 h-2"></div>
+                  </div>
+                  <span className="text-gray-600">Advanced molecular engineering</span>
+                </li>
+              </ul>
+            </motion.div>
+            
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.5 }}
+              className="flex justify-center"
+            >
+              <a href="#products" className="btn btn-primary">
+                Explore Our Products
+              </a>
+            </motion.div>
+          </div>
+          
+          <div ref={moleculeRef}>
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.8 }}
+              className="grid grid-cols-2 gap-6"
+            >
+              {/* NK Cells Technology Card */}
+              <div className="col-span-2 bg-white rounded-xl shadow-md overflow-hidden">
+                <div className="relative h-48 bg-gradient-to-r from-primary-600 to-primary-400">
+                  <div className="absolute inset-0 flex items-center justify-center text-white">
+                    <div className="text-center">
+                      <Microscope size={40} className="mx-auto mb-2" />
+                      <h4 className="text-xl font-semibold">NK Cells</h4>
+                    </div>
+                  </div>
+                </div>
+                <div className="p-6">
+                  <p className="text-gray-600">
+                    Our proprietary NK cell platform generates highly cytotoxic cells with enhanced tumor-targeting abilities and extended persistence in vivo.
+                  </p>
+                </div>
+              </div>
+
+              {/* Gamma Delta T Cells Technology Card */}
+              <div className="col-span-2 md:col-span-1 bg-white rounded-xl shadow-md overflow-hidden">
+                <div className="relative h-40 bg-gradient-to-r from-secondary-600 to-secondary-400">
+                  <div className="absolute inset-0 flex items-center justify-center text-white">
+                    <div className="text-center">
+                      <Zap size={32} className="mx-auto mb-2" />
+                      <h4 className="text-lg font-semibold">Gamma Delta T Cells</h4>
+                    </div>
+                  </div>
+                </div>
+                <div className="p-5">
+                  <p className="text-gray-600">
+                    Specialized T cells that recognize a broader range of tumor antigens and exhibit potent anti-tumor activity.
+                  </p>
+                </div>
+              </div>
+
+              {/* Retroviral Vector Technology Card */}
+              <div className="col-span-2 md:col-span-1 bg-white rounded-xl shadow-md overflow-hidden">
+                <div className="relative h-40 bg-gradient-to-r from-primary-600 to-tertiary-500">
+                  <div className="absolute inset-0 flex items-center justify-center text-white">
+                    <div className="text-center">
+                      <div className="w-8 h-8 border-2 border-white rounded-full flex items-center justify-center mx-auto mb-2">
+                        <div className="w-4 h-4 bg-white rounded-full"></div>
+                      </div>
+                      <h4 className="text-lg font-semibold">Gamma Retroviral Vectors</h4>
+                    </div>
+                  </div>
+                </div>
+                <div className="p-5">
+                  <p className="text-gray-600">
+                    Advanced delivery systems for efficient genetic modification of immune cells with high specificity and safety.
+                  </p>
+                </div>
+              </div>
+            </motion.div>
+          </div>
+        </div>
+
+        {/* Category filter tabs for dynamic content */}
+        {technologies.some(tech => tech.category) && (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.2 }}
+            className="flex justify-center mb-12"
+          >
+            <div className="inline-flex bg-white rounded-full p-1 shadow-sm">
+              <button
+                onClick={() => setCategory('all')}
+                className={`px-5 py-2 text-sm font-medium rounded-full transition ${
+                  category === 'all' ? 'bg-primary-500 text-white' : 'text-gray-700 hover:bg-gray-100'
+                }`}
+              >
+                All Technologies
+              </button>
+              <button
+                onClick={() => setCategory('Core Technology')}
+                className={`px-5 py-2 text-sm font-medium rounded-full transition ${
+                  category === 'Core Technology' ? 'bg-primary-500 text-white' : 'text-gray-700 hover:bg-gray-100'
+                }`}
+              >
+                Core Technologies
+              </button>
+              <button
+                onClick={() => setCategory('Future Technology')}
+                className={`px-5 py-2 text-sm font-medium rounded-full transition ${
+                  category === 'Future Technology' ? 'bg-tertiary-500 text-white' : 'text-gray-700 hover:bg-gray-100'
+                }`}
+              >
+                Future Technologies
+              </button>
+            </div>
+          </motion.div>
+        )}
+
+        {/* Dynamic Technology Content */}
+        <div className="mt-16">
+          <motion.h3 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.3 }}
+            className="heading-sm mb-8 text-primary-600 text-center"
+          >
+          </motion.h3>
+
+          {/* Core Technologies Section - Dynamic content */}
+          {coreTechnologies.length > 0 && (
+            <div className="mb-16">
+              <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                {coreTechnologies.map((tech, index) => (
+              <motion.div
+                key={tech.id}
+                    initial={{ opacity: 0, y: 30 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.6, delay: 0.1 * index }}
+                    className="bg-white rounded-xl shadow-md overflow-hidden cursor-pointer hover:shadow-lg transition-shadow duration-300"
+                    onClick={() => setSelectedTech(tech)}
+                  >
+                    {tech.image ? (
+                      <div className="h-48 overflow-hidden">
+                        <img 
+                          src={tech.image} 
+                          alt={tech.title} 
+                          className="w-full h-full object-cover"
+                          onError={(e) => {
+                            e.currentTarget.src = '/assets/facilities/facility.jpeg';
+                          }}
+                        />
+                      </div>
+                    ) : (
+                      <div className="h-48 bg-gradient-to-r from-primary-600 to-primary-400 flex items-center justify-center">
+                        <div className="text-white text-center">
+                          {getIconComponent(tech)}
+                          <h4 className="text-xl font-semibold mt-2">{tech.title}</h4>
+                        </div>
+                      </div>
+                    )}
+                    
+                    <div className="p-6">
+                      <h3 className="text-xl font-semibold mb-3 text-primary-700">{tech.title}</h3>
+                      <p className="text-gray-600 mb-4 line-clamp-3">
+                        {truncateText(tech.description, 30)}
+                      </p>
+                      <div className="flex justify-end">
+                        <button 
+                          className="inline-flex items-center text-primary-600 hover:text-primary-700 font-medium"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setSelectedTech(tech);
+                          }}
+                        >
+                          Learn more
+                          <ExternalLink size={16} className="ml-1" />
+                        </button>
+                      </div>
+                    </div>
+                  </motion.div>
+                ))}
+              </div>
+            </div>
+          )}
+        </div>
+
+        {/* Future Technologies Section - 20% */}
+        {futureTechnologies.length > 0 && (
+          <motion.div
+            initial={{ opacity: 0, y: 40 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.6 }}
+            className="bg-gradient-to-r from-tertiary-50 to-tertiary-100 rounded-2xl p-8 mb-10"
+          >
+            <h3 className="heading-sm mb-6 text-center text-tertiary-700">Future Technologies</h3>
+            
+            <div className="grid md:grid-cols-3 gap-6">
+              {futureTechnologies.map((tech) => (
+                <div 
+                  key={tech.id}
+                  className="bg-white rounded-xl shadow-sm p-6 cursor-pointer hover:shadow-md transition-shadow duration-300"
+                  onClick={() => setSelectedTech(tech)}
+                >
+                  <div className="flex items-center mb-4">
+                    <div className="bg-tertiary-100 rounded-full p-3 mr-4">
+                      {getIconComponent(tech)}
+                    </div>
+                    <h4 className="text-lg font-semibold text-tertiary-700">{tech.title}</h4>
+                  </div>
+                  <p className="text-gray-600 line-clamp-3">
+                    {truncateText(tech.description, 20)}
+                  </p>
+                  <div className="mt-4 flex justify-end">
+                    <button 
+                      className="text-sm text-tertiary-600 hover:text-tertiary-700 flex items-center"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setSelectedTech(tech);
+                      }}
+                    >
+                      Details
+                      <ExternalLink size={14} className="ml-1" />
+                  </button>
+                  </div>
+                </div>
+            ))}
+          </div>
+          </motion.div>
+        )}
+
+        {/* Technology Detail Popup */}
+        {selectedTech && (
+          <TechnologyPopup
+            technology={selectedTech}
+            onClose={() => setSelectedTech(null)}
+          />
+        )}
+      </div>
+    </section>
+  );
+};
+
+export default Technology;
