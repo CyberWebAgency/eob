@@ -12,7 +12,6 @@ const navItems = [
   { name: 'Team', href: '/team' },
   { name: 'Collaborators', href: '/collaborators' },
   { name: 'News', href: '/news' },
-  { name: 'Contact', href: '/contact' },
 ];
 
 const Navbar: React.FC = () => {
@@ -49,14 +48,15 @@ const Navbar: React.FC = () => {
       }`}
     >
       <nav className="container-custom flex items-center justify-between">
+        {/* Logo - Left */}
         <div className="flex-shrink-0 z-10">
           <Link to="/">
             <Logo scrolled={!isTransparent} />
           </Link>
         </div>
 
-        {/* Desktop Navigation */}
-        <div className="hidden md:flex items-center space-x-8">
+        {/* Desktop Navigation - Center */}
+        <div className="hidden md:flex items-center space-x-8 absolute left-1/2 transform -translate-x-1/2">
           {navItems.map((item) => (
             <Link
               key={item.name}
@@ -68,8 +68,12 @@ const Navbar: React.FC = () => {
               {item.name}
             </Link>
           ))}
+        </div>
+
+        {/* Get in Touch Button - Right */}
+        <div className="hidden md:flex">
           <Link
-            to="/#contact"
+            to="/contact"
             className={`btn ${
               isTransparent ? 'bg-white text-primary-600 hover:bg-primary-50' : 'btn-primary'
             }`}

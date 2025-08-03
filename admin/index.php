@@ -86,9 +86,9 @@ if ($result) {
           <h6 class="text-sm font-medium text-gray-600">Collaborators & Investors</h6>
           <p class="mt-2 text-3xl font-semibold text-gray-800"><?php echo $stats['collaborators']; ?></p>
         </div>
-        <i class="fas fa-handshake text-4xl text-indigo-600"></i>
+        <i class="fas fa-handshake text-4xl text-primary"></i>
       </div>
-      <a href="collaborators.php" class="mt-4 text-sm font-medium text-indigo-600 hover:text-indigo-700">Manage Collaborators &rarr;</a>
+      <a href="collaborators.php" class="mt-4 text-sm font-medium text-primary hover:text-primary-dark">Manage Collaborators &rarr;</a>
     </div>
 
     <div class="bg-white border border-gray-200 rounded-lg shadow-sm p-4 flex flex-col justify-between h-full hover:shadow-md transition-shadow duration-200">
@@ -149,7 +149,7 @@ if ($result) {
           <i class="fas fa-plus-circle"></i>
           <span>Add Team Member</span>
         </a>
-        <a href="collaborators.php?action=add" class="bg-indigo-100 hover:bg-indigo-200 text-indigo-600 flex items-center justify-center space-x-2 py-2 rounded transition-colors duration-200">
+        <a href="collaborators.php?action=add" class="bg-primary bg-opacity-10 hover:bg-opacity-20 text-primary flex items-center justify-center space-x-2 py-2 rounded transition-colors duration-200">
           <i class="fas fa-plus-circle"></i>
           <span>Add Collaborator</span>
         </a>

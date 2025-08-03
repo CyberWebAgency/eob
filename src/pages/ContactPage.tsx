@@ -7,7 +7,7 @@ const ContactPage: React.FC = () => {
   return (
     <div className="min-h-screen bg-white">
       <Navbar />
-      <main>
+      <main className="pt-10">
         {/* <section className="pt-32 pb-16 bg-gradient-to-b from-primary-50 to-white">
           <div className="container-custom">
             <div className="max-w-3xl mx-auto text-center mb-8">

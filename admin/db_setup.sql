@@ -73,6 +73,7 @@ CREATE TABLE technologies (
     title VARCHAR(255) NOT NULL,
     description TEXT,
     image VARCHAR(255),
+    type ENUM('core', 'future') DEFAULT 'core',
     order_number INT DEFAULT 0,
     status ENUM('active', 'inactive') DEFAULT 'active',
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,

@@ -247,15 +247,15 @@ if ($action == 'add' || $action == 'edit') {
     <div class="bg-white rounded-xl p-6 shadow-sm">
         <h2 class="text-xl font-semibold text-gray-800 mb-4">Team Members</h2>
         <div class="overflow-x-auto">
-            <table class="min-w-full divide-y divide-gray-200">
+            <table class="min-w-full divide-y divide-gray-200 table-fixed">
                 <thead class="bg-gray-50">
                     <tr>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Photo</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Title</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Type</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                        <th class="w-20 px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Photo</th>
+                        <th class="w-48 px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
+                        <th class="w-48 px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Title</th>
+                        <th class="w-48 px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Type</th>
+                        <th class="w-24 px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                        <th class="w-32 px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
                     </tr>
                 </thead>
                 <tbody class="bg-white divide-y divide-gray-200">
@@ -274,17 +274,17 @@ if ($action == 'add' || $action == 'edit') {
                                 </div>
                             <?php endif; ?>
                         </td>
-                        <td class="px-6 py-4 whitespace-nowrap">
-                            <div class="text-sm font-medium text-gray-900"><?php echo htmlspecialchars($row['name']); ?></div>
+                        <td class="px-6 py-4">
+                            <div class="text-sm font-medium text-gray-900 overflow-hidden overflow-ellipsis"><?php echo htmlspecialchars($row['name']); ?></div>
                             <?php if($row['email']): ?>
-                                <div class="text-sm text-gray-500"><?php echo htmlspecialchars($row['email']); ?></div>
+                                <div class="text-sm text-gray-500 overflow-hidden overflow-ellipsis"><?php echo htmlspecialchars($row['email']); ?></div>
                             <?php endif; ?>
                         </td>
-                        <td class="px-6 py-4 whitespace-nowrap">
-                            <div class="text-sm text-gray-900"><?php echo htmlspecialchars($row['title']); ?></div>
+                        <td class="px-6 py-4">
+                            <div class="text-sm text-gray-900 overflow-hidden overflow-ellipsis"><?php echo htmlspecialchars($row['title']); ?></div>
                         </td>
-                        <td class="px-6 py-4 whitespace-nowrap">
-                            <div class="text-sm text-gray-900"><?php echo htmlspecialchars($row['member_type']); ?></div>
+                        <td class="px-6 py-4">
+                            <div class="text-sm text-gray-900 overflow-hidden overflow-ellipsis"><?php echo htmlspecialchars($row['member_type']); ?></div>
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap">
                             <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full <?php echo $row['status'] == 'active' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'; ?>">

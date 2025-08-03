@@ -37,6 +37,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['csrf_token'])) {
         $title = trim($_POST["title"]);
         $description = trim($_POST["description"]);
         $status = $_POST["status"];
+        $type = $_POST["type"];
         $order_number = isset($_POST["order_number"]) ? intval($_POST["order_number"]) : 0;
         $id = isset($_POST["id"]) && !empty($_POST["id"]) ? $_POST["id"] : null;
         
@@ -54,9 +55,9 @@ if($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['csrf_token'])) {
             // Handle image upload with automatic old image deletion
             $image_path = handleFileUpload("image", "uploads/technology/", $currentImage);
             
-            $sql = "UPDATE technologies SET title = ?, description = ?, status = ?, order_number = ?";
-            $params = array($title, $description, $status, $order_number);
-            $types = "sssi";
+            $sql = "UPDATE technologies SET title = ?, description = ?, status = ?, type = ?, order_number = ?";
+            $params = array($title, $description, $status, $type, $order_number);
+            $types = "ssssi";
             
             if($image_path) {
                 $sql .= ", image = ?";
@@ -83,9 +84,9 @@ if($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['csrf_token'])) {
             // Handle image upload for new technology
             $image_path = handleFileUpload("image", "uploads/technology/");
             
-            $sql = "INSERT INTO technologies (title, description, image, status, order_number) VALUES (?, ?, ?, ?, ?)";
+            $sql = "INSERT INTO technologies (title, description, image, type, status, order_number) VALUES (?, ?, ?, ?, ?, ?)";
             if($stmt = mysqli_prepare($conn, $sql)) {
-                mysqli_stmt_bind_param($stmt, "ssssi", $title, $description, $image_path, $status, $order_number);
+                mysqli_stmt_bind_param($stmt, "sssssi", $title, $description, $image_path, $type, $status, $order_number);
                 if(mysqli_stmt_execute($stmt)) {
                     $_SESSION['success'] = "Technology added successfully.";
                 } else {
@@ -175,6 +176,15 @@ if($result = mysqli_query($conn, $sql)) {
             </select>
         </div>
         
+        <div>
+            <label for="type" class="block text-sm font-medium text-gray-700">Type</label>
+            <select name="type" id="type" required
+                    class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary focus:ring focus:ring-primary focus:ring-opacity-50">
+                <option value="core">Core</option>
+                <option value="future">Future</option>
+            </select>
+        </div>
+        
         <div class="flex justify-end space-x-3">
             <button type="button" onclick="resetForm()"
                     class="px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary">
@@ -198,6 +208,7 @@ if($result = mysqli_query($conn, $sql)) {
                     <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Order</th>
                     <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Image</th>
                     <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Title</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Type</th>
                     <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
                     <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
                 </tr>
@@ -222,12 +233,17 @@ if($result = mysqli_query($conn, $sql)) {
                         <div class="text-sm text-gray-500"><?php echo substr(htmlspecialchars($tech['description']), 0, 100) . '...'; ?></div>
                     </td>
                     <td class="px-6 py-4 whitespace-nowrap">
+                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full <?php echo $tech['type'] == 'core' ? 'bg-blue-100 text-blue-800' : 'bg-purple-100 text-purple-800'; ?>">
+                            <?php echo ucfirst($tech['type']); ?>
+                        </span>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap">
                         <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full <?php echo $tech['status'] == 'active' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'; ?>">
                             <?php echo ucfirst($tech['status']); ?>
                         </span>
                     </td>
                     <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                        <button onclick='editTechnology(<?php echo json_encode($tech); ?>)'
+                        <button onclick='editTechnology(<?php echo $tech['id']; ?>)'
                                 class="text-primary hover:text-primary-dark mr-3">
                             <i class="fas fa-edit"></i> Edit
                         </button>
@@ -244,13 +260,23 @@ if($result = mysqli_query($conn, $sql)) {
 </div>
 
 <script>
-function editTechnology(tech) {
+// Store all technologies data in a JavaScript array to avoid inline JSON issues
+const technologiesData = <?php echo json_encode($technologies); ?>;
+
+function editTechnology(techId) {
     try {
+        // Find the technology by ID
+        const tech = technologiesData.find(t => t.id == techId);
+        if (!tech) {
+            throw new Error('Technology not found');
+        }
+        
         // Set form values
         document.getElementById('edit_id').value = tech.id;
         document.getElementById('title').value = tech.title;
         document.getElementById('description').value = tech.description;
         document.getElementById('status').value = tech.status;
+        document.getElementById('type').value = tech.type || 'core';
         document.getElementById('order_number').value = tech.order_number || 0;
         
         // Get the form heading using a more specific selector
@@ -262,7 +288,7 @@ function editTechnology(tech) {
         // Scroll to the form
         document.querySelector('form').scrollIntoView({ behavior: 'smooth' });
     } catch (error) {
-        console.error("Error while editing technology:", error, tech);
+        console.error("Error while editing technology:", error);
         alert("Failed to load technology data for editing. Please try again.");
     }
 }
@@ -272,6 +298,7 @@ function resetForm() {
     document.getElementById('title').value = '';
     document.getElementById('description').value = '';
     document.getElementById('status').value = 'active';
+    document.getElementById('type').value = 'core';
     document.getElementById('order_number').value = '0';
     document.getElementById('image').value = '';
     

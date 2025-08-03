@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
 import ScrollToTop from './components/ScrollToTop';
 import Navbar from './components/Navbar';
 import Hero from './components/Hero';
@@ -19,6 +19,64 @@ import AboutPage from './pages/AboutPage';
 import TechnologyPage from './pages/TechnologyPage';
 import ContactPage from './pages/ContactPage';
 import CollaboratorsPage from './pages/CollaboratorsPage';
+import PrivacyPolicyPage from './pages/PrivacyPolicyPage';
+import { updateSEO, defaultSEOData } from './utils/seo';
+
+// SEO Wrapper Component to handle dynamic SEO updates
+const SEOWrapper: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  const location = useLocation();
+
+  useEffect(() => {
+    // Update SEO based on current route
+    const path = location.pathname;
+    let seoData;
+
+    switch (path) {
+      case '/':
+        seoData = defaultSEOData.home;
+        break;
+      case '/about':
+        seoData = defaultSEOData.about;
+        break;
+      case '/technology':
+        seoData = defaultSEOData.technology;
+        break;
+      case '/products':
+        seoData = defaultSEOData.products;
+        break;
+      case '/team':
+        seoData = defaultSEOData.team;
+        break;
+      case '/collaborators':
+        seoData = defaultSEOData.collaborators;
+        break;
+      case '/news':
+        seoData = defaultSEOData.news;
+        break;
+      case '/contact':
+        seoData = defaultSEOData.contact;
+        break;
+      case '/privacy-policy':
+        seoData = defaultSEOData.privacyPolicy;
+        break;
+      default:
+        // For dynamic routes like /news/:id
+        if (path.startsWith('/news/')) {
+          seoData = {
+            ...defaultSEOData.news,
+            title: 'News Article | East Ocyon Bio',
+            canonical: `https://eastocyonbio.com${path}`
+          };
+        } else {
+          seoData = defaultSEOData.home;
+        }
+    }
+
+    updateSEO(seoData);
+  }, [location]);
+
+  return <>{children}</>;
+};
 
 // Preloader component
 const Preloader = () => (
@@ -71,20 +129,23 @@ function App() {
     <>
       {loading && <Preloader />}
       <Router>
-        <ScrollToTop />
-        <div className="min-h-screen bg-white text-gray-900 overflow-x-hidden">
-          <Routes>
-            <Route path="/" element={<HomePage />} />
-            <Route path="/about" element={<AboutPage />} />
-            <Route path="/technology" element={<TechnologyPage />} />
-            <Route path="/products" element={<ProductsPage />} />
-            <Route path="/team" element={<TeamPage />} />
-            <Route path="/collaborators" element={<CollaboratorsPage />} />
-            <Route path="/news" element={<NewsPage />} />
-            <Route path="/news/:id" element={<NewsArticle />} />
-            <Route path="/contact" element={<ContactPage />} />
-          </Routes>
-        </div>
+        <SEOWrapper>
+          <ScrollToTop />
+          <div className="min-h-screen bg-white text-gray-900 overflow-x-hidden">
+            <Routes>
+              <Route path="/" element={<HomePage />} />
+              <Route path="/about" element={<AboutPage />} />
+              <Route path="/technology" element={<TechnologyPage />} />
+              <Route path="/products" element={<ProductsPage />} />
+              <Route path="/team" element={<TeamPage />} />
+              <Route path="/collaborators" element={<CollaboratorsPage />} />
+              <Route path="/news" element={<NewsPage />} />
+              <Route path="/news/:id" element={<NewsArticle />} />
+              <Route path="/contact" element={<ContactPage />} />
+              <Route path="/privacy-policy" element={<PrivacyPolicyPage />} />
+            </Routes>
+          </div>
+        </SEOWrapper>
       </Router>
     </>
   );

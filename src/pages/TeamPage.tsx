@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';
-import { Linkedin, Mail } from 'lucide-react';
+import { Linkedin, Mail, Twitter, X } from 'lucide-react';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import { getTeamMembers } from '../services/api';
@@ -19,41 +19,150 @@ interface TeamMember {
   member_type: string;
 }
 
+// Popup component for detailed view
+const TeamMemberPopup: React.FC<{
+  member: TeamMember;
+  onClose: () => void;
+}> = ({ member, onClose }) => {
+  return (
+    <AnimatePresence>
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+        className="fixed inset-0 bg-black/50 z-[60] flex items-start justify-center px-4 pt-20 pb-4 overflow-auto"
+        onClick={onClose}
+      >
+        <motion.div
+          initial={{ scale: 0.9, opacity: 0 }}
+          animate={{ scale: 1, opacity: 1 }}
+          exit={{ scale: 0.9, opacity: 0 }}
+          className="bg-white rounded-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto z-[70] relative"
+          onClick={e => e.stopPropagation()}
+        >
+          <div className="relative">
+            {member.photo && (
+              <div className="relative h-80 overflow-hidden">
+                <img
+                  src={member.photo}
+                  alt={member.name}
+                  className="w-full h-full object-cover"
+                  onError={(e) => {
+                    e.currentTarget.src = '/assets/facilities/facility.jpeg';
+                  }}
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-primary-900/80 to-transparent"></div>
+              </div>
+            )}
+            <button
+              onClick={onClose}
+              className="absolute top-4 right-4 bg-white/90 hover:bg-white text-gray-800 rounded-full p-2 transition-colors"
+            >
+              <X size={20} />
+            </button>
+          </div>
+          <div className="p-6">
+            <h3 className="text-2xl font-semibold mb-2">{member.name}</h3>
+            <p className="text-primary-600 text-lg mb-6">{member.title}</p>
+            <div className="prose prose-lg max-w-none">
+              <p className="text-gray-600 whitespace-pre-line">{member.bio || 'No biography available'}</p>
+            </div>
+            <div className="mt-6 flex space-x-4">
+              {member.linkedin && (
+                <a href={member.linkedin} className="text-primary-600 hover:text-primary-700 transition-colors">
+                  <Linkedin size={24} />
+                </a>
+              )}
+              {member.twitter && (
+                <a href={member.twitter} className="text-primary-600 hover:text-primary-700 transition-colors">
+                  <Twitter size={24} />
+                </a>
+              )}
+              {member.email && (
+                <a href={`mailto:${member.email}`} className="text-primary-600 hover:text-primary-700 transition-colors">
+                  <Mail size={24} />
+                </a>
+              )}
+            </div>
+          </div>
+        </motion.div>
+      </motion.div>
+    </AnimatePresence>
+  );
+};
+
 // Component to render each team member card
 const TeamMemberCard: React.FC<{ member: TeamMember }> = ({ member }) => {
+  const [showPopup, setShowPopup] = useState(false);
+
+  // Function to truncate text to approximately 100 characters
+  const truncateText = (text: string, maxLength: number = 100) => {
+    if (!text) return 'No biography available';
+    if (text.length <= maxLength) return text;
+    return text.slice(0, maxLength) + '...';
+  };
+
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.5 }}
-      className="bg-white rounded-lg shadow-md overflow-hidden"
-    >
-      <div className="relative h-60 overflow-hidden">
-        <img 
-          src={member.photo ? member.photo : '/assets/facilities/facility.jpeg'} 
-          alt={member.name} 
-          className="w-full h-full object-cover transition-transform duration-500 hover:scale-105"
-        />
-        <div className="absolute bottom-0 left-0 right-0 bg-primary-900/80 p-2 flex justify-end">
-          <div className="flex space-x-2">
-            {member.linkedin && (
-              <a href={member.linkedin} className="text-white hover:text-primary-200 transition-colors p-1">
-                <Linkedin size={16} />
-              </a>
-            )}
-            {member.email && (
-              <a href={`mailto:${member.email}`} className="text-white hover:text-primary-200 transition-colors p-1">
-                <Mail size={16} />
-              </a>
-            )}
+    <>
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+        className="bg-white rounded-xl overflow-hidden shadow-lg group cursor-pointer"
+        onClick={() => setShowPopup(true)}
+      >
+        <div className="relative h-64 overflow-hidden">
+          <img 
+            src={member.photo ? member.photo : '/assets/facilities/facility.jpeg'} 
+            alt={member.name} 
+            className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-primary-900/80 to-transparent opacity-0 group-hover:opacity-90 transition-opacity duration-300 flex flex-col justify-end p-6">
+            <p className="text-white mb-4 text-sm">{truncateText(member.bio || '')}</p>
+            <div className="flex space-x-3">
+              {member.linkedin && (
+                <a 
+                  href={member.linkedin} 
+                  className="text-white hover:text-primary-200 transition-colors"
+                  onClick={(e) => e.stopPropagation()}
+                >
+                  <Linkedin size={18} />
+                </a>
+              )}
+              {member.twitter && (
+                <a 
+                  href={member.twitter} 
+                  className="text-white hover:text-primary-200 transition-colors"
+                  onClick={(e) => e.stopPropagation()}
+                >
+                  <Twitter size={18} />
+                </a>
+              )}
+              {member.email && (
+                <a 
+                  href={`mailto:${member.email}`} 
+                  className="text-white hover:text-primary-200 transition-colors"
+                  onClick={(e) => e.stopPropagation()}
+                >
+                  <Mail size={18} />
+                </a>
+              )}
+            </div>
           </div>
         </div>
-      </div>
-      <div className="p-4">
-        <h3 className="font-semibold text-lg text-gray-900">{member.name}</h3>
-        <p className="text-primary-600 text-sm">{member.title}</p>
-      </div>
-    </motion.div>
+        <div className="p-6">
+          <h3 className="font-semibold text-lg">{member.name}</h3>
+          <p className="text-primary-600">{member.title}</p>
+        </div>
+      </motion.div>
+
+      {showPopup && (
+        <TeamMemberPopup
+          member={member}
+          onClose={() => setShowPopup(false)}
+        />
+      )}
+    </>
   );
 };
 

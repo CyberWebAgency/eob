@@ -223,14 +223,19 @@ const ProductsPage: React.FC = () => {
         {/* Hero section */}
         <section className="pt-32 bg-background">
           <div className="container-custom">
-            <div className="max-w-3xl mx-auto text-center">
+            <motion.div 
+              className="max-w-3xl mx-auto text-center"
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8 }}
+            >
               <h1 className="heading-lg mb-4">
                 Our <span className="text-gradient">Products</span>
               </h1>
               <p className="text-gray-700 text-lg">
                 Innovative solutions driving the future of biotechnology
               </p>
-            </div>
+            </motion.div>
           </div>
         </section>
         

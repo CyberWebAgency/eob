@@ -1,19 +1,19 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';
-import { Microscope, Zap, Globe, HeartPulse, ChevronRight, ChevronLeft } from 'lucide-react';
+import { Globe, HeartPulse, ChevronRight, ChevronLeft } from 'lucide-react';
 
 const features = [
-  {
-    icon: <Microscope className="h-6 w-6 text-primary-600" />,
-    title: 'NK Cell Technology',
-    description: "Our proprietary technology enhances natural killer cells' ability to search and destroy tumor cells."
-  },
-  {
-    icon: <Zap className="h-6 w-6 text-secondary-600" />,
-    title: 'Gamma Delta T Cells',
-    description: 'Advanced γδ T cell therapies with unique cancer targeting capabilities and reduced risk of side effects.'
-  },
+  // {
+  //   icon: <Shield className="h-6 w-6 text-primary-600" />,
+  //   title: 'NK Cell Technology',
+  //   description: "Our proprietary technology enhances natural killer cells' ability to search and destroy tumor cells."
+  // },
+  // {
+  //   icon: <Bean className="h-6 w-6 text-secondary-600" />,
+  //   title: 'Gamma Delta T Cells',
+  //   description: 'Advanced γδ T cell therapies with unique cancer targeting capabilities and reduced risk of side effects.'
+  // },
   {
     icon: <Globe className="h-6 w-6 text-tertiary-600" />,
     title: 'Global Access',
@@ -29,19 +29,19 @@ const features = [
 // Facility images
 const facilityImages = [
   {
-    src: "/assets/facilities/facility.jpeg",
+    src: "/assets/facilities/facility.jpg",
     alt: "Modern Laboratory Facility",
-    caption: "State-of-the-art research and development laboratory"
+    caption: "Upcoming GMP Manf facility"
   },
   {
     src: "/assets/facilities/equipments.jpg",
     alt: "Cell Culture Laboratory",
-    caption: "Advanced cell culture and processing facility"
+    caption: "Molecular Biology Laboratory"
   },
   {
     src: "/assets/facilities/lab1.jpg",
     alt: "Manufacturing Suite",
-    caption: "GMP-compliant cell therapy manufacturing suite"
+    caption: "Analytical Lab"
   },
   {
     src: "/assets/facilities/lab2.jpg",
@@ -52,6 +52,11 @@ const facilityImages = [
     src: "/assets/facilities/lab3.jpg",
     alt: "Quality Control Lab",
     caption: "Quality control and testing laboratory"
+  },
+  {
+    src: "/assets/facilities/lab4.jpg",
+    alt: "Dedicated BSL2 facility for Viral vectors",
+    caption: "Dedicated BSL2 facility for Viral vectors"
   }
 ];
 
@@ -94,7 +99,7 @@ const About: React.FC = () => {
           </p>
           <p className="text-gray-600 text-lg">
             We are dedicated to developing breakthrough cellular therapies using NK cells and Gamma Delta T cells 
-            for cancer treatment. Our proprietary platforms harness these immune cells to locate and eliminate 
+            for cancer and autoimmune. Our proprietary platforms harness these immune cells to locate and eliminate 
             tumor cells with high specificity and safety.
           </p>
         </motion.div>
@@ -165,7 +170,7 @@ const About: React.FC = () => {
           className="mt-20"
         >
           <div className="text-center mb-12">
-            <h2 className="heading-sm mb-4 text-tertiary-600">Our State-of-the-Art Facilities</h2>
+            <h2 className="heading-sm mb-4 text-tertiary-600">Our Facilities</h2>
             <p className="text-gray-600 max-w-2xl mx-auto">
               East Ocyon Bio operates cutting-edge research and manufacturing facilities 
               equipped with the latest technologies to develop and produce our cellular immunotherapies.

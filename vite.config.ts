@@ -7,5 +7,26 @@ export default defineConfig({
   optimizeDeps: {
     exclude: ['lucide-react'],
   },
-  base: process.env.NODE_ENV === 'production' ? '/eob/' : '/',
+  build: {
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          vendor: ['react', 'react-dom'],
+          router: ['react-router-dom'],
+          animations: ['framer-motion'],
+          three: ['three', '@react-three/fiber', '@react-three/drei']
+        }
+      }
+    },
+    // Ensure SEO files are copied to dist
+    copyPublicDir: true,
+  },
+  // SEO and performance optimizations
+  server: {
+    headers: {
+      'Cache-Control': 'public, max-age=31536000',
+    }
+  },
+  // Ensure proper base URL for production
+  base: '/',
 });

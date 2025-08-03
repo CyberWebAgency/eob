@@ -122,39 +122,39 @@ if ($action === 'add'): ?>
           <div>
             <label for="name" class="block text-sm font-medium text-gray-700">Title/Name <span class="text-red-500">*</span></label>
             <input type="text" id="name" name="name" required
-                   class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                   class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-primary focus:border-primary sm:text-sm">
           </div>
           <div>
             <label for="description" class="block text-sm font-medium text-gray-700">Description</label>
             <textarea id="description" name="description" rows="4"
-                      class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"></textarea>
+                      class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-primary focus:border-primary sm:text-sm"></textarea>
           </div>
           <div>
             <label for="logo" class="block text-sm font-medium text-gray-700">Logo/Image</label>
             <input type="file" id="logo" name="logo" data-preview="logoPreview"
-                   class="mt-1 block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100">
+                   class="mt-1 block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:bg-primary-50 file:text-primary-700 hover:file:bg-primary-100">
             <img id="logoPreview" class="hidden mt-2 w-32 h-32 object-cover rounded-md" alt="Preview">
           </div>
           <div>
             <label for="website" class="block text-sm font-medium text-gray-700">Website URL</label>
             <input type="url" id="website" name="website" placeholder="https://example.com"
-                   class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                   class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-primary focus:border-primary sm:text-sm">
           </div>
           <div>
             <label for="status" class="block text-sm font-medium text-gray-700">Status</label>
             <select id="status" name="status"
-                    class="mt-1 block w-full border-gray-300 bg-white rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                    class="mt-1 block w-full border-gray-300 bg-white rounded-md shadow-sm focus:ring-primary focus:border-primary sm:text-sm">
               <option value="active">Active</option>
               <option value="inactive">Inactive</option>
             </select>
           </div>
           <div class="flex space-x-3">
             <button type="submit" name="add"
-                    class="inline-flex justify-center py-2 px-4 bg-indigo-600 text-white text-sm font-medium rounded-md shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                    class="inline-flex justify-center py-2 px-4 bg-primary text-white text-sm font-medium rounded-md shadow-sm hover:bg-primary-dark focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary">
               Save
             </button>
             <a href="collaborators.php"
-               class="inline-flex justify-center py-2 px-4 bg-white text-gray-700 text-sm font-medium border border-gray-300 rounded-md shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+               class="inline-flex justify-center py-2 px-4 bg-white text-gray-700 text-sm font-medium border border-gray-300 rounded-md shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary">
               Cancel
             </a>
           </div>
@@ -177,12 +177,12 @@ if ($action === 'add'): ?>
               <label for="name" class="block text-sm font-medium text-gray-700">Title/Name <span class="text-red-500">*</span></label>
               <input type="text" id="name" name="name" required
                      value="<?php echo htmlspecialchars($collaborator['title']); ?>"
-                     class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                     class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-primary focus:border-primary sm:text-sm">
             </div>
             <div>
               <label for="description" class="block text-sm font-medium text-gray-700">Description</label>
               <textarea id="description" name="description" rows="4"
-                        class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"><?php echo htmlspecialchars($collaborator['description']); ?></textarea>
+                        class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-primary focus:border-primary sm:text-sm"><?php echo htmlspecialchars($collaborator['description']); ?></textarea>
             </div>
             <?php if ($collaborator['image']): ?>
               <div>
@@ -194,7 +194,7 @@ if ($action === 'add'): ?>
             <div>
               <label for="logo" class="block text-sm font-medium text-gray-700">Logo/Image</label>
               <input type="file" id="logo" name="logo" data-preview="logoPreview"
-                     class="mt-1 block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100">
+                     class="mt-1 block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:bg-primary-50 file:text-primary-700 hover:file:bg-primary-100">
               <img id="logoPreview" class="hidden mt-2 w-32 h-32 object-cover rounded-md" alt="Preview">
               <p class="mt-1 text-sm text-gray-500">Leave empty to keep current logo</p>
             </div>
@@ -202,23 +202,23 @@ if ($action === 'add'): ?>
               <label for="website" class="block text-sm font-medium text-gray-700">Website URL</label>
               <input type="url" id="website" name="website" placeholder="https://example.com"
                      value="<?php echo htmlspecialchars($collaborator['link']); ?>"
-                     class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                     class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-primary focus:border-primary sm:text-sm">
             </div>
             <div>
               <label for="status" class="block text-sm font-medium text-gray-700">Status</label>
               <select id="status" name="status"
-                      class="mt-1 block w-full border-gray-300 bg-white rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                      class="mt-1 block w-full border-gray-300 bg-white rounded-md shadow-sm focus:ring-primary focus:border-primary sm:text-sm">
                 <option value="active" <?php echo ($collaborator['status'] === 'active') ? 'selected' : ''; ?>>Active</option>
                 <option value="inactive" <?php echo ($collaborator['status'] === 'inactive') ? 'selected' : ''; ?>>Inactive</option>
               </select>
             </div>
             <div class="flex space-x-3">
               <button type="submit" name="update"
-                      class="inline-flex justify-center py-2 px-4 bg-indigo-600 text-white text-sm font-medium rounded-md shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                      class="inline-flex justify-center py-2 px-4 bg-primary text-white text-sm font-medium rounded-md shadow-sm hover:bg-primary-dark focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary">
                 Update
               </button>
               <a href="collaborators.php"
-                 class="inline-flex justify-center py-2 px-4 bg-white text-gray-700 text-sm font-medium border border-gray-300 rounded-md shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                 class="inline-flex justify-center py-2 px-4 bg-white text-gray-700 text-sm font-medium border border-gray-300 rounded-md shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary">
                 Cancel
               </a>
             </div>
@@ -237,7 +237,7 @@ if ($action === 'add'): ?>
     <div class="max-w-7xl mx-auto p-6">
       <div class="flex justify-end mb-4">
         <a href="collaborators.php?action=add"
-           class="inline-flex items-center px-4 py-2 bg-indigo-600 text-white text-sm font-medium rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+           class="inline-flex items-center px-4 py-2 bg-primary text-white text-sm font-medium rounded-md hover:bg-primary-dark focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary">
           <i class="fas fa-plus mr-2"></i> Add Collaborator/Investor
         </a>
       </div>
@@ -273,7 +273,7 @@ if ($action === 'add'): ?>
                   </td>
                   <td class="px-6 py-4 whitespace-nowrap text-sm">
                     <?php if ($row['link']): ?>
-                      <a href="<?php echo htmlspecialchars($row['link']); ?>" target="_blank" class="text-indigo-600 hover:text-indigo-900">
+                      <a href="<?php echo htmlspecialchars($row['link']); ?>" target="_blank" class="text-primary hover:text-primary-dark">
                         <i class="fas fa-external-link-alt mr-1"></i> Visit
                       </a>
                     <?php else: ?>
@@ -286,7 +286,7 @@ if ($action === 'add'): ?>
                     </span>
                   </td>
                   <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                    <a href="collaborators.php?action=edit&id=<?php echo $row['id']; ?>" class="text-indigo-600 hover:text-indigo-900 mr-2">
+                    <a href="collaborators.php?action=edit&id=<?php echo $row['id']; ?>" class="text-primary hover:text-primary-dark mr-2">
                       <i class="fas fa-edit"></i> Edit
                     </a>
                     <button onclick="confirmDelete(<?php echo $row['id']; ?>)" class="text-red-600 hover:text-red-900">

@@ -1,8 +1,11 @@
 // API base URL - localhost
 // const API_BASE_URL = 'http://localhost/EOB/api';
 
+// API base URL - production test subdomain
+// const API_BASE_URL = 'https://eob.cyberwebopera.com/api';
+
 // API base URL - production
-const API_BASE_URL = 'https://eob.cyberwebopera.com/api';
+const API_BASE_URL = 'https://eastocyonbio.com/api';
 
 // Default fetch timeout (5 seconds)
 const DEFAULT_TIMEOUT = 5000;
@@ -101,9 +104,10 @@ export const getProducts = async () => {
   }
 };
 
-export const getTechnology = async () => {
+export const getTechnology = async (type?: string) => {
   try {
-    return await fetchData('technology.php');
+    const endpoint = type ? `technology.php?type=${encodeURIComponent(type)}` : 'technology.php';
+    return await fetchData(endpoint);
   } catch (error) {
     console.error('Error fetching technology:', error);
     return [];

@@ -21,15 +21,18 @@ const Hero: React.FC = () => {
       {/* Background image */}
       <div className="absolute inset-0">
         <video
-          src="public/home.mp4"
+          src="/home.mp4"
           className="w-full h-full object-cover"
           autoPlay
           loop
           muted
           playsInline
         />
-        {/* Overlay for better text contrast - increased opacity from 40% to 60% */}
-        <div className="absolute inset-0 bg-black/60"></div>
+        {/* Dark glow effect for UI distinguishability - replaces the solid overlay */}
+        <div 
+          className="absolute inset-0" 
+          style={{ background: 'radial-gradient(circle at center, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0) 70%)' }}
+        ></div>
       </div>
       
       {/* Content - Simplified and focused */}
@@ -49,7 +52,7 @@ const Hero: React.FC = () => {
             transition={{ duration: 0.5, delay: 0.2 }}
           >
             <h1 className="heading-lg text-white mb-6">
-            Pioneering <span className="text-green-600">NK Cells</span> & <span className="text-green-600">Gamma Delta T Cells</span>
+            Pioneering <span className="text-primary-300">NK Cells</span> & <span className="text-primary-300">Gamma Delta T Cells</span>
             </h1>
           </motion.div>
           

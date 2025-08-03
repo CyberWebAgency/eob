@@ -1,16 +1,8 @@
-import { lazy, Suspense } from 'react';
 import { createRoot } from 'react-dom/client';
 import './index.css';
-
-// Lazy load the main app component
-const App = lazy(() => import('./App.tsx'));
+import App from './App.tsx';  // Regular import instead of lazy loading
 
 // Create a simple loading component
-const LoadingFallback = () => (
-  <div className="flex items-center justify-center min-h-screen bg-gray-50">
-    <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-600"></div>
-  </div>
-);
 
 // Add error tracking function
 function logError(error: Error) {
@@ -26,9 +18,7 @@ if (rootElement) {
   
   // Use error boundary and suspense for better UX
   root.render(
-    <Suspense fallback={<LoadingFallback />}>
-      <App />
-    </Suspense>
+    <App />  // Remove Suspense wrapper since we're not lazy loading
   );
 }
 
@@ -36,11 +26,10 @@ if (rootElement) {
 if (process.env.NODE_ENV === 'production') {
   // Report web vitals
   const reportWebVitals = () => {
-    import('web-vitals').then(({ getCLS, getFID, getFCP, getLCP, getTTFB }) => {
-      getCLS(console.log); // Cumulative Layout Shift
-      getFID(console.log); // First Input Delay
-      getFCP(console.log); // First Contentful Paint
-      getLCP(console.log); // Largest Contentful Paint
+    import('web-vitals').then(({ onCLS, onFCP, onLCP }) => {
+      onCLS(console.log); // Cumulative Layout Shift
+      onFCP(console.log); // First Contentful Paint
+      onLCP(console.log); // Largest Contentful Paint
       getTTFB(console.log); // Time to First Byte
     });
   };
@@ -53,3 +42,7 @@ if (process.env.NODE_ENV === 'production') {
 window.addEventListener('error', (event) => {
   logError(event.error);
 });
+function getTTFB(_log: { (...data: any[]): void; (message?: any, ...optionalParams: any[]): void; }) {
+  throw new Error('Function not implemented.');
+}
+

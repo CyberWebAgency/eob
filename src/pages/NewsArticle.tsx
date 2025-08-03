@@ -207,7 +207,7 @@ const NewsArticle: React.FC = () => {
     return (
       <div className="min-h-screen bg-background">
         <Navbar />
-        <div className="container-custom py-20 flex justify-center items-center">
+        <div className="container-custom content-container py-32 flex justify-center items-center">
           <div className="w-16 h-16 border-4 border-primary-500 border-t-transparent rounded-full animate-spin"></div>
         </div>
         <Footer />
@@ -219,7 +219,7 @@ const NewsArticle: React.FC = () => {
     return (
       <div className="min-h-screen bg-background">
         <Navbar />
-        <div className="container-custom py-20 text-center">
+        <div className="container-custom content-container py-32 text-center">
           <h2 className="heading-md mb-6">Article Not Found</h2>
           <p className="text-gray-600 mb-6">{error || "The article you're looking for does not exist or has been removed."}</p>
           <Link to="/news" className="btn btn-primary">
@@ -235,7 +235,7 @@ const NewsArticle: React.FC = () => {
     <div className="min-h-screen bg-background">
       <Navbar />
       
-      <article>
+      <article className="content-container">
         {/* Hero section with image */}
         {article.image && (
           <div className="relative w-full h-[40vh] md:h-[50vh] lg:h-[60vh] overflow-hidden">
